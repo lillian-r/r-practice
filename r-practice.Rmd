@@ -6,28 +6,171 @@ output: html_document
 ---
 
 # Welcome!
-Hi! So you have figured out how to create a markdown file. nice job!
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+Hiya! So you have a markdown file. This is a file where you can combine written text, code, and images into one document. If you want to create your own markdown file, click File + New File + R Markdown. Enter a title for your new document and hit okay. You'll open a new file and see some text. You'll see some brief intro text. You can safely delete all of it except for the first 6 lines.
+
+You can separate sections of your file by creating headings. To do this, start a line with a "#" like on line 8 above. 
+
+To put code in your document, you need to put it in a code chunk. To create a code chunk, press Cmd+option+i. 
+
+```{r}
+# here is my code chunk! this is a comment :)
 ```
 
-## R Markdown
+It's helpful to separate your code into chunks. For example, I don't need to re load in my dataset every time I want to do something new. So, I can load my data in one code chunk and keep working on my analysis in a different one. You should write all your code sequentially so that no code in the beginning of the document relies on something later. To run a code chunk, hit the green arrow in the top right corner.
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+# Packages
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Libraries are little add-ons that give you new tools to work with. To install a package, type "install.packages(name of package)" in the console(the little command line below). For example: install.packages(ggplot2) will install the ggplot2 package onto my computer. 
 
-```{r cars}
-summary(cars)
+Now you try loading the tidyverse package.
+
+Once I have the package on my computer, I add it to my current R file with the library command. For example:
+```{r}
+library("ggplot2")
 ```
 
-## Including Plots
+Now you try loading the tidyverse package.
 
-You can also embed plots, for example:
+```{r}
 
-```{r pressure, echo=FALSE}
-plot(pressure)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+# Loading in data
+
+In order to load your dataset, first make sure that it is stored in the same folder as your current R project. Then make sure that you have set this folder as your current working directory (this means that you've told RStudio where all your important files are). To do this, click Session + Choose Directory and select your folder.
+
+Most of the datasets you'll be using are .csv files. You can load these with the following command:
+```{r}
+# df <- read_csv("name of file")
+```
+
+This reads in the data set and saves it under the name "df". For this practice, we'll use a dataset built into R.
+
+```{r}
+data(iris)
+```
+
+You should see an item in your "Environment" tab with the name iris. Click on it to see the data.
+
+# Dplyr
+
+To analyze our data, we're going to use dplyr, which is a subpackage of tidyverse. This is a very powerful package! It lets you pass a dataset through a series of commands. 
+
+## Select
+
+Select lets you choose columns of your data. 
+
+```{r}
+# select one column
+
+# select multiple columns
+
+```
+
+You can also reorder columns with select.
+
+```{r}
+
+```
+
+Or, you can remove a column. 
+
+```{r}
+
+```
+
+## Filter
+
+Filter lets you choose certain rows of your dataset.
+
+```{r}
+
+```
+```{r}
+
+```
+Filter will drop any NA rows in your dataset, FYI.
+
+## Arrange
+
+Arrange helps you reorder the rows of your dataset.
+
+```{r}
+
+```
+
+## Mutate
+
+Mutate helps you create new columns.
+
+```{r}
+
+```
+
+## Summarize
+
+Summarize (or summarise, they work the same) gives you summary statistics. Some helpful functions include:
+
+- mean(), median(), sd()
+- min(), max()
+- n(), n_distinct()
+
+
+```{r}
+
+```
+So that isn't very helpful. Summarize is usually paired with another command, group_by(), in order to be most effective.
+
+```{r}
+
+```
+
+# ggplot
+
+ggplot2 is a package to help you make charts and graphs! First, you tell ggplot your dataset and which columns to pay attention to. Then, you tell it what elements to add to your graph.
+
+## Scatter Plot
+
+```{r}
+
+```
+
+ggplot2 lets you stack multiple chart elements on top of one another. For example, we can add a trendline.
+
+```{r}
+ggplot(iris, aes(x = Petal.Width, y = Petal.Length)) +
+  geom_point() +
+  
+```
+
+You can edit the axis titles with "labs". 
+
+```{r}
+ggplot(iris, aes(x = Petal.Width, y = Petal.Length)) +
+  geom_point() +
+  geom_smooth(method='lm') +
+
+```
+# Bar Chart
+
+```{r}
+iris %>% # you can also directly pipe datasets into ggplot graphs!
+  group_by(Species) %>% 
+  summarise(mean = mean(Sepal.Length)) %>% 
+  
+```
+
+https://r-graph-gallery.com/ is a very helpful website for how to make all the different types of ggplot graphs.
+
+For help with general commands, you can always enter "help("name of command")" into your console to see the documentation for that command. 
+
+Helpful commands that we didn't go over today:
+- cbind/rbind lets you combine multiple vectors/datasets by column or row
+- c() combines mutiple values into a vector
+- pivot_wider/pivot_longer lets you rearrange a dataset
+- left_join/right_join/full_join joins datasets by a common id
+- clean_names (this is in the janitor package and is very helpful)
+- if you're working with dates/times, lubridate is a very helpful package
+- recode_values
+- case_when (this is the R version of if/else statements)
